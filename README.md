@@ -3,16 +3,16 @@
 ```bash
 FROM debian:jessie-slim
 ENV LANG en_US.UTF-8
-LABEL name=pdftron-php-5.6 version=2.0.0 \
+LABEL name=pdftron-php-5.6 version=2.0.1 \
       maintainer="swarajgiri@gmail.com"
 
 # Install dependencies
-RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq -o Acquire::CompressionTypes::Order::=gz && \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -yqq -o Acquire::CompressionTypes::Order::=gz && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils locales wget git cmake \
     zip unzip swig2.0
 
 # Set the locale
-RUN locale-gen en_US.UTF-8
+RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 
 # Install php
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 14AA40EC0831756756D7F66C4F4EA0AAE5267A6C \
@@ -40,7 +40,8 @@ RUN mkdir wrappers_build && cd wrappers_build \
 # Set current directory
 WORKDIR wrappers_build/PDFNetWrappers/Samples
 
-# Execute this command on startup with cmd as argument
+# Execute all php tests
 ENTRYPOINT ["/bin/bash"]
 CMD ["runall_php.sh"]
+
 ```
